@@ -5,6 +5,8 @@ const oL = '#';
 const aB = '|';
 const oB = '|';
 
+const print = process.stdout.write.bind(process.stdout);
+
 ;(async()=>{
 
     // console.log('\x1b[35;1m---------------------------------\x1b[22m')
@@ -18,7 +20,7 @@ const oB = '|';
         const inp = await input('? ');
         
         if (!inp) {
-            console.log('\x1b[A\x1b[G\x1b[K\x1b[A');
+            print('\x1b[A\x1b[G\x1b[K');
             continue;
         }
 
@@ -28,7 +30,7 @@ const oB = '|';
         const inpt = inp.match(/\s*(\d+)\s*[,. ]\s*(\d+)\s*/);
 
         if (!inpt) {
-            console.log('\x1b[A\x1b[G\x1b[K\x1b[A');
+            print('\x1b[A\x1b[G\x1b[K');
             continue;
         }
 
@@ -36,7 +38,7 @@ const oB = '|';
         let olive = 0;
         let oblank = 0;
 
-        console.log('\x1b[A\x1b[G\x1b[K\x1b[A\n');
+        print('\x1b[A\x1b[G\x1b[K\n\n');
 
         for (;;) {
             const ck = blank+live;
@@ -50,8 +52,10 @@ const oB = '|';
 
             const c = await getch(true, 'utf-8', ()=>null, ()=>null);
 
-            if (!c || c == '\x1b')
+            if (!c || c == '\x1b') {
+                print('\x1b[A\x1b[G\x1b[K'.repeat(2));
                 break;
+            }
             
             switch (c) {
                 case 'l':
@@ -84,24 +88,22 @@ const oB = '|';
                 } break;
                 case 'f': {
                     const v = await input('\x1b[31m?\x1b[39m ');
-                    if (!v || v == CancelChar || Number.isNaN(+v))
-                        break;
-                    live = +v;
-                    olive = 0;
-                    console.log('\x1b[A\x1b[G\x1b[K\x1b[A');
+                    if (v && v != CancelChar && !Number.isNaN(+v)) {
+                        live = +v;
+                        olive = 0;   
+                    }
+                    print('\x1b[A\x1b[G\x1b[K');
                 } break;
                 case 'g': {
                     const v = await input('\x1b[37m?\x1b[39m ');
-                    if (!v || v == CancelChar || Number.isNaN(+v))
-                        break;
-                    blank = +v;
-                    oblank = 0;
-                    console.log('\x1b[A\x1b[G\x1b[K\x1b[A');
+                    if (v && v != CancelChar && !Number.isNaN(+v)) {
+                        blank = +v;
+                        oblank = 0;   
+                    }
+                    print('\x1b[A\x1b[G\x1b[K');
                 } break;
             }
         }
-
-        process.stdout.write('\x1b[A\x1b[G\x1b[K'.repeat(3))
     }
 
 })();

@@ -1,4 +1,4 @@
-# Roulette
+# 🎡 Roulette
 
 A small tool to keep track with roulette rounds
 
